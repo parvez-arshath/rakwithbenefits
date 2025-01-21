@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Properties;
+import java.util.Scanner;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -163,6 +165,113 @@ public class BaseClass {
 		return props;
 
 	}
+	
+
+	public static String basePremiumAIAW() throws Exception {
+
+		// Database connection details
+		String dbURL = "jdbc:mysql://aura-uat.cwfjz6cyloxy.me-south-1.rds.amazonaws.com:3306";
+		String dbUsername = "admin";
+		String dbPassword = "zFs4upwKvvpRbbXcKSTf8La3MP4ymd";
+
+		// Variables to hold user inputs
+		String emirateName, tpaName, planName;
+
+		// Scanner to get user inputs
+		Scanner scanner = new Scanner(System.in);
+
+		try (Connection connection = DriverManager.getConnection(dbURL, dbUsername, dbPassword)) {
+			// Prompt the user for inputs
+			System.out.print("Enter Emirate Name (e.g., Dubai): ");
+			emirateName = scanner.nextLine();
+
+			System.out.print("Enter TPA Name (e.g., Mednet): ");
+			tpaName = scanner.nextLine();
+
+			System.out.print("Enter Plan Name (e.g., Gold): ");
+			planName = scanner.nextLine();
+
+			// Step 1: Get Active Version ID
+			String activeVersionQuery = " WITH ActiveVersion AS (\r\n" + "                    SELECT pv.id\r\n"
+					+ "                    FROM 7003_group_medical_aiaw_transactions.product_versions pv\r\n"
+					+ "                    WHERE pv.status = 1 AND pv.effective_date <= CURDATE()\r\n"
+					+ "                    ORDER BY pv.effective_date DESC\r\n" + "                    LIMIT 1\r\n"
+					+ "                )\r\n" + "                SELECT id FROM ActiveVersion;";
+
+			int activeVersionId = 0;
+			try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(activeVersionQuery)) {
+				if (rs.next()) {
+					activeVersionId = rs.getInt("id");
+				}
+			}
+
+			// Step 2: Get Group ID based on Active Version
+			String groupQuery = "SELECT id FROM 7003_group_medical_aiaw_transactions.group WHERE status = 1 AND version_id = ?";
+			int groupId = 0;
+			try (PreparedStatement pstmt = connection.prepareStatement(groupQuery)) {
+				pstmt.setInt(1, activeVersionId);
+				try (ResultSet rs = pstmt.executeQuery()) {
+					if (rs.next()) {
+						groupId = rs.getInt("id");
+					}
+				}
+			}
+
+			// Step 3: Get Emirate ID based on Group ID and Emirate Name
+			String emirateQuery = "SELECT id FROM 7003_group_medical_aiaw_transactions.emirate WHERE group_id = ? AND emirate_name LIKE ?";
+			int emirateId = 0;
+			try (PreparedStatement pstmt = connection.prepareStatement(emirateQuery)) {
+				pstmt.setInt(1, groupId);
+				pstmt.setString(2, "%" + emirateName + "%");
+				try (ResultSet rs = pstmt.executeQuery()) {
+					if (rs.next()) {
+						emirateId = rs.getInt("id");
+					}
+				}
+			}
+
+			// Step 4: Get TPA ID based on Group ID, Emirate ID, and TPA Name
+			String tpaQuery = "SELECT id FROM 7003_group_medical_aiaw_transactions.tpa WHERE group_id = ? AND emirate_id = ? AND tpa_name LIKE ?";
+			int tpaId = 0;
+			try (PreparedStatement pstmt = connection.prepareStatement(tpaQuery)) {
+				pstmt.setInt(1, groupId);
+				pstmt.setInt(2, emirateId);
+				pstmt.setString(3, "%" + tpaName + "%");
+				try (ResultSet rs = pstmt.executeQuery()) {
+					if (rs.next()) {
+						tpaId = rs.getInt("id");
+					}
+				}
+			}
+
+			// Step 5: Get Plan ID based on TPA ID and Plan Name
+			String planQuery = "SELECT id FROM 7003_group_medical_aiaw_transactions.plan WHERE tpa_id = ? AND Plan_name LIKE ?";
+			int planId = 0;
+			try (PreparedStatement pstmt = connection.prepareStatement(planQuery)) {
+				pstmt.setInt(1, tpaId);
+				pstmt.setString(2, "%" + planName + "%");
+				try (ResultSet rs = pstmt.executeQuery()) {
+					if (rs.next()) {
+						planId = rs.getInt("id");
+					}
+				}
+			}
+
+			// Step 6: Fetch Premium Details
+			String premiumQuery = "SELECT * FROM 7003_group_medical_aiaw_transactions.premium WHERE plan_id = ? AND status = 1";
+
+			String valueOf = String.valueOf(planId);
+
+			premiumQuery = premiumQuery.replace("?", valueOf);
+			
+		/*	System.out.println(premiumQuery);
+*/
+			return premiumQuery;
+
+		}
+
+	}
+
 
 	public static void fetchDataFromDatabase(String dbURL, String dbUsername, String dbPassword, String query,
 			String excelFilePath, int sheetNum) throws SQLException {
@@ -345,15 +454,6 @@ public class BaseClass {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public static String basePremium(int planId, int status) {
-		// Base Premium
-		String premiumQuery = String.format(
-				"SELECT * FROM 7003_group_medical_aiaw_transactions.premium WHERE plan_id=%d AND status=%d;", planId,
-				status);
-		return premiumQuery;
-
 	}
 
 }

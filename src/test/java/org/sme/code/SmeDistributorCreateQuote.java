@@ -69,13 +69,13 @@ public class SmeDistributorCreateQuote extends BaseClass {
 
 	@When("User select number of categories")
 	public void user_select_number_of_categories() {
-	/*	selectDropDownData(createQuoteElements.getNumCategoriesDropDown(), "2");*/
+		/* selectDropDownData(createQuoteElements.getNumCategoriesDropDown(), "2"); */
 		selectDropDownData(createQuoteElements.getNumCategoriesDropDown(), "1");
 	}
 
 	@When("User enter distributor commission")
 	public void user_enter_distributor_commission() {
-		fillTextBox(createQuoteElements.getDistributorCommisionTextBox(), "6");
+		fillTextBox(createQuoteElements.getDistributorCommisionTextBox(), "15");
 	}
 
 	@When("User enter sales agent")
@@ -106,14 +106,14 @@ public class SmeDistributorCreateQuote extends BaseClass {
 	public void user_should_select_TPA_category() {
 
 		selectDropDownData(createQuoteElements.getSelectTpaCatA(), "0");
-		/*selectDropDownData(createQuoteElements.getSelectTpaCatB(), "0");*/
+		/* selectDropDownData(createQuoteElements.getSelectTpaCatB(), "0"); */
 	}
 
 	@When("User should select plan category")
 	public void user_should_select_plan_category() {
 
 		selectDropDownData(createQuoteElements.getSelectPlanCatA(), "0");
-		/*selectDropDownData(createQuoteElements.getSelectPlanCatB(), "0");*/
+		/* selectDropDownData(createQuoteElements.getSelectPlanCatB(), "0"); */
 	}
 
 	@When("User should click and upload template")
@@ -126,8 +126,11 @@ public class SmeDistributorCreateQuote extends BaseClass {
 	@When("User click proceed")
 	public void user_click_proceed() throws InterruptedException {
 
-		/*JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("arguments[0].click()", createQuoteElements.getProceedBtn());*/
+		/*
+		 * JavascriptExecutor js = (JavascriptExecutor) driver;
+		 * js.executeScript("arguments[0].click()",
+		 * createQuoteElements.getProceedBtn());
+		 */
 
 		Thread.sleep(2000);
 		jsClick(createQuoteElements.getProceedBtn());
@@ -135,8 +138,8 @@ public class SmeDistributorCreateQuote extends BaseClass {
 
 	@When("User click next button")
 	public void user_click_next_button() throws InterruptedException {
-	/*	Thread.sleep(3000);
-		jsClick(createQuoteElements.getNextButtonChoosePlan());*/
+		Thread.sleep(3000);
+		jsClick(createQuoteElements.getNextButtonChoosePlan());
 	}
 
 	@Then("User must displayed with quote created popup message")
@@ -147,49 +150,63 @@ public class SmeDistributorCreateQuote extends BaseClass {
 	}
 
 	@Then("User should validate the total premium for the created qoute")
-	public void user_should_validate_the_total_premium_for_the_created_qoute() throws SQLException, IOException {
-		
-		System.out.println(calculatorData().getProperty("queryAIAWBasePremium"));
+	public void user_should_validate_the_total_premium_for_the_created_qoute() throws Exception {
 
-		// base premium
+		System.out.println(basePremiumAIAW());
+
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
-				calculatorData().getProperty("dbPasswordUAT"), calculatorData().getProperty("queryAIAWBasePremium"),
+				calculatorData().getProperty("dbPasswordUAT"), basePremiumAIAW(),
 				calculatorData().getProperty("excelCalculatorFilePath"), 0);
 
+		/*
+		 * // base premium
+		 * fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"),
+		 * calculatorData().getProperty("dbUsernameUAT"),
+		 * calculatorData().getProperty("dbPasswordUAT"),
+		 * calculatorData().getProperty("queryAIAWBasePremium"),
+		 * calculatorData().getProperty("excelCalculatorFilePath"), 0);
+		 */
+
+		System.out.println(calculatorData().getProperty("queryAIAWBenefits"));
 		// benefits
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
 				calculatorData().getProperty("dbPasswordUAT"), calculatorData().getProperty("queryAIAWBenefits"),
 				calculatorData().getProperty("excelCalculatorFilePath"), 1);
 
+		System.out.println(calculatorData().getProperty("queryAIAWNationalityLoadings"));
 		// nationality loadings
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
 				calculatorData().getProperty("dbPasswordUAT"),
 				calculatorData().getProperty("queryAIAWNationalityLoadings"),
 				calculatorData().getProperty("excelCalculatorFilePath"), 4);
 
+		System.out.println(calculatorData().getProperty("queryAIAWIndustryLoadings"));
 		// industry loading
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
 				calculatorData().getProperty("dbPasswordUAT"),
 				calculatorData().getProperty("queryAIAWIndustryLoadings"),
 				calculatorData().getProperty("excelCalculatorFilePath"), 5);
 
+		System.out.println(calculatorData().getProperty("queryAIAWPreviousInsurerLoadings"));
 		// previous insurer loading
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
 				calculatorData().getProperty("dbPasswordUAT"),
 				calculatorData().getProperty("queryAIAWPreviousInsurerLoadings"),
 				calculatorData().getProperty("excelCalculatorFilePath"), 6);
 
+		System.out.println(calculatorData().getProperty("queryAIAWCommission"));
 		// Commission
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
 				calculatorData().getProperty("dbPasswordUAT"), calculatorData().getProperty("queryAIAWCommission"),
 				calculatorData().getProperty("excelCalculatorFilePath"), 9);
 
-		// Census
-		toFetchCensusSheet("C:\\Users\\impelox-pc-048\\Desktop\\censuses sheet\\census_a_automation.xlsx",
-				"C:\\Users\\impelox-pc-048\\eclipse-workspace\\SmeSingleCategory\\target\\ExcelCalculatorForDistributor\\Arshad New Calculator.xlsx", 0,
-				10);
+		/*
+		 * // Census
+		 * toFetchCensusSheet("C:\\Users\\impelox-pc-048\\Desktop\\censuses sheet\\census_a_automation.xlsx"
+		 * ,
+		 * "C:\\Users\\impelox-pc-048\\eclipse-workspace\\SmeSingleCategory\\target\\ExcelCalculatorForDistributor\\Arshad New Calculator.xlsx"
+		 * , 0, 10);
+		 */
 	}
 
 }
-
-;
