@@ -8,7 +8,12 @@ import org.sme.utilities.BaseClass;
 public class Demo extends BaseClass {
 
 	public static void main(String[] args) throws SQLException, IOException {
-		// base premium
+		
+		
+		String queryAiawBenefits = benefitsAIAW("TEST-ABC-0125-1-00065");
+		System.out.println(queryAiawBenefits);
+		
+		/*// base premium
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
 				calculatorData().getProperty("dbPasswordUAT"), calculatorData().getProperty("queryAIAWBasePremium"),
 				calculatorData().getProperty("excelCalculatorFilePath"), 0);
@@ -44,7 +49,7 @@ public class Demo extends BaseClass {
 		// Census
 		toFetchCensusSheet("C:\\Users\\impelox-pc-048\\Desktop\\censuses sheet\\census_a_automation.xlsx",
 				"C:\\Users\\impelox-pc-048\\eclipse-workspace\\SmeSingleCategory\\target\\ExcelCalculatorForDistributor\\Arshad New Calculator.xlsx",
-				0, 10);
+				0, 10);*/
 
 	}
 

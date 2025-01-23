@@ -149,10 +149,10 @@ public class SmeDistributorCreateQuote extends BaseClass {
 
 	}
 
+	String crn;
+
 	@Then("User should validate the total premium for the created qoute")
 	public void user_should_validate_the_total_premium_for_the_created_qoute() throws Exception {
-
-		System.out.println(basePremiumAIAW());
 
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
 				calculatorData().getProperty("dbPasswordUAT"), basePremiumAIAW(),
@@ -167,17 +167,18 @@ public class SmeDistributorCreateQuote extends BaseClass {
 		 * calculatorData().getProperty("excelCalculatorFilePath"), 0);
 		 */
 
-		System.out.println(calculatorData().getProperty("queryAIAWBenefits"));
+		crn = createQuoteElements.getCustomerId().getText();
+		System.out.println(benefitsAIAW(crn));
 		// benefits
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
-				calculatorData().getProperty("dbPasswordUAT"), calculatorData().getProperty("queryAIAWBenefits"),
+				calculatorData().getProperty("dbPasswordUAT"), benefitsAIAW(crn),
 				calculatorData().getProperty("excelCalculatorFilePath"), 1);
 
-		System.out.println(calculatorData().getProperty("queryAIAWNationalityLoadings"));
+		String nationalityLoadingQueryAIAW = nationalityLoadingQueryAIAW();
+		System.out.println(nationalityLoadingQueryAIAW);
 		// nationality loadings
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
-				calculatorData().getProperty("dbPasswordUAT"),
-				calculatorData().getProperty("queryAIAWNationalityLoadings"),
+				calculatorData().getProperty("dbPasswordUAT"), nationalityLoadingQueryAIAW,
 				calculatorData().getProperty("excelCalculatorFilePath"), 4);
 
 		System.out.println(calculatorData().getProperty("queryAIAWIndustryLoadings"));
