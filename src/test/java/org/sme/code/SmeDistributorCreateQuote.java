@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.Select;
 import org.sme.pojo.CreateQuotePojo;
 import org.sme.utilities.BaseClass;
 
@@ -69,7 +70,7 @@ public class SmeDistributorCreateQuote extends BaseClass {
 
 	@When("User select number of categories")
 	public void user_select_number_of_categories() {
-		/* selectDropDownData(createQuoteElements.getNumCategoriesDropDown(), "2"); */
+		
 		selectDropDownData(createQuoteElements.getNumCategoriesDropDown(), "1");
 	}
 
@@ -96,24 +97,31 @@ public class SmeDistributorCreateQuote extends BaseClass {
 		selectDropDownData(createQuoteElements.getSelectGroupnameDropDown(), "0");
 	}
 
+	String emirate;
+
 	@When("User should select emirates category")
 	public void user_should_select_emirates_category() {
-		selectDropDownData(createQuoteElements.getSelectEmiratesDropDownCatA(), "1");
-//		selectDropDownData(createQuoteElements.getSelectEmiratesDropDownCatB(), "1");
+		Select emirateDropDownData = selectDropDownData(createQuoteElements.getSelectEmiratesDropDownCatA(), "1");
+		emirate = emirateDropDownData.getFirstSelectedOption().getText();
+
 	}
 
+	String tpa;
 	@When("User should select TPA category")
 	public void user_should_select_TPA_category() {
 
-		selectDropDownData(createQuoteElements.getSelectTpaCatA(), "0");
-		/* selectDropDownData(createQuoteElements.getSelectTpaCatB(), "0"); */
+		Select tpaDropDownData = selectDropDownData(createQuoteElements.getSelectTpaCatA(), "0");
+		 tpa = tpaDropDownData.getFirstSelectedOption().getText();
+		
 	}
-
+	
+	String plan;
 	@When("User should select plan category")
 	public void user_should_select_plan_category() {
-
-		selectDropDownData(createQuoteElements.getSelectPlanCatA(), "0");
-		/* selectDropDownData(createQuoteElements.getSelectPlanCatB(), "0"); */
+	
+		Select planDropDownData = selectDropDownData(createQuoteElements.getSelectPlanCatA(), "0");
+		plan = planDropDownData.getFirstSelectedOption().getText();
+		
 	}
 
 	@When("User should click and upload template")
@@ -126,12 +134,7 @@ public class SmeDistributorCreateQuote extends BaseClass {
 	@When("User click proceed")
 	public void user_click_proceed() throws InterruptedException {
 
-		/*
-		 * JavascriptExecutor js = (JavascriptExecutor) driver;
-		 * js.executeScript("arguments[0].click()",
-		 * createQuoteElements.getProceedBtn());
-		 */
-
+		
 		Thread.sleep(2000);
 		jsClick(createQuoteElements.getProceedBtn());
 	}
@@ -153,46 +156,42 @@ public class SmeDistributorCreateQuote extends BaseClass {
 
 	@Then("User should validate the total premium for the created qoute")
 	public void user_should_validate_the_total_premium_for_the_created_qoute() throws Exception {
-
+		
+		// base premium
+		String basePremiumAIAW = basePremiumAIAW(emirate, tpa, plan);
+		System.out.println(basePremiumAIAW);
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
-				calculatorData().getProperty("dbPasswordUAT"), basePremiumAIAW(),
+				calculatorData().getProperty("dbPasswordUAT"), basePremiumAIAW,
 				calculatorData().getProperty("excelCalculatorFilePath"), 0);
 
-		/*
-		 * // base premium
-		 * fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"),
-		 * calculatorData().getProperty("dbUsernameUAT"),
-		 * calculatorData().getProperty("dbPasswordUAT"),
-		 * calculatorData().getProperty("queryAIAWBasePremium"),
-		 * calculatorData().getProperty("excelCalculatorFilePath"), 0);
-		 */
+	
 
+		// benefits
 		crn = createQuoteElements.getCustomerId().getText();
 		System.out.println(benefitsAIAW(crn));
-		// benefits
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
 				calculatorData().getProperty("dbPasswordUAT"), benefitsAIAW(crn),
 				calculatorData().getProperty("excelCalculatorFilePath"), 1);
 
-		String nationalityLoadingQueryAIAW = nationalityLoadingQueryAIAW();
-		System.out.println(nationalityLoadingQueryAIAW);
 		// nationality loadings
+		String nationalityLoadingQueryAIAW = nationalityLoadingQueryAIAW(emirate, tpa);
+		System.out.println(nationalityLoadingQueryAIAW);
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
 				calculatorData().getProperty("dbPasswordUAT"), nationalityLoadingQueryAIAW,
 				calculatorData().getProperty("excelCalculatorFilePath"), 4);
 
-		System.out.println(calculatorData().getProperty("queryAIAWIndustryLoadings"));
 		// industry loading
+		String industryLoadingQueryAIAW = industryLoadingQueryAIAW(emirate, tpa);
+		System.out.println(industryLoadingQueryAIAW);
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
-				calculatorData().getProperty("dbPasswordUAT"),
-				calculatorData().getProperty("queryAIAWIndustryLoadings"),
+				calculatorData().getProperty("dbPasswordUAT"), industryLoadingQueryAIAW,
 				calculatorData().getProperty("excelCalculatorFilePath"), 5);
 
-		System.out.println(calculatorData().getProperty("queryAIAWPreviousInsurerLoadings"));
 		// previous insurer loading
+		String previousInsurerLoadingQueryAIAW = previousInsurerLoadingQueryAIAW(emirate,tpa);
+		System.out.println(previousInsurerLoadingQueryAIAW);
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
-				calculatorData().getProperty("dbPasswordUAT"),
-				calculatorData().getProperty("queryAIAWPreviousInsurerLoadings"),
+				calculatorData().getProperty("dbPasswordUAT"), previousInsurerLoadingQueryAIAW,
 				calculatorData().getProperty("excelCalculatorFilePath"), 6);
 
 		System.out.println(calculatorData().getProperty("queryAIAWCommission"));

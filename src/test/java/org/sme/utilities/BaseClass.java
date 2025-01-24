@@ -37,7 +37,6 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import net.masterthought.cucumber.json.support.Durationable;
 
 public class BaseClass {
 
@@ -130,9 +129,10 @@ public class BaseClass {
 	 * 
 	 * }
 	 */
-	public static void selectDropDownData(WebElement element, String value) {
+	public static Select selectDropDownData(WebElement element, String value) {
 		Select s = new Select(element);
 		s.selectByValue(value);
+		return s;
 	}
 
 	public static WebElement dynamicWait(WebElement element) {
@@ -166,8 +166,8 @@ public class BaseClass {
 
 	}
 
-// base premium
-	public static String basePremiumAIAW() throws Exception {
+	// base premium query
+	public static String basePremiumAIAW(String emirate, String tpa, String plan) throws Exception {
 
 		// Database connection details
 		String dbURL = "jdbc:mysql://aura-uat.cwfjz6cyloxy.me-south-1.rds.amazonaws.com:3306";
@@ -177,19 +177,20 @@ public class BaseClass {
 		// Variables to hold user inputs
 		String emirateName, tpaName, planName;
 
-		// Scanner to get user inputs
-		Scanner scanner = new Scanner(System.in);
+		/*
+		 * // Scanner to get user inputs Scanner scanner = new Scanner(System.in);
+		 */
 
 		try (Connection connection = DriverManager.getConnection(dbURL, dbUsername, dbPassword)) {
 			// Prompt the user for inputs
-			System.out.print("Enter Emirate Name (e.g., Dubai): ");
-			emirateName = scanner.nextLine();
+			/* System.out.print("Enter Emirate Name (e.g., Dubai): "); */
+			emirateName = emirate;
 
-			System.out.print("Enter TPA Name (e.g., Mednet): ");
-			tpaName = scanner.nextLine();
+			/* System.out.print("Enter TPA Name (e.g., Mednet): "); */
+			tpaName = tpa;
 
-			System.out.print("Enter Plan Name (e.g., Gold): ");
-			planName = scanner.nextLine();
+			/* System.out.print("Enter Plan Name (e.g., Gold): "); */
+			planName = plan;
 
 			// Step 1: Get Active Version ID
 			String activeVersionQuery = " WITH ActiveVersion AS (\r\n" + "                    SELECT pv.id\r\n"
@@ -202,6 +203,7 @@ public class BaseClass {
 			try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(activeVersionQuery)) {
 				if (rs.next()) {
 					activeVersionId = rs.getInt("id");
+					/* System.out.println(activeVersionId); */
 				}
 			}
 
@@ -213,6 +215,7 @@ public class BaseClass {
 				try (ResultSet rs = pstmt.executeQuery()) {
 					if (rs.next()) {
 						groupId = rs.getInt("id");
+						/* System.out.println(groupId); */
 					}
 				}
 			}
@@ -226,6 +229,7 @@ public class BaseClass {
 				try (ResultSet rs = pstmt.executeQuery()) {
 					if (rs.next()) {
 						emirateId = rs.getInt("id");
+						/* System.out.println(emirateId); */
 					}
 				}
 			}
@@ -240,6 +244,7 @@ public class BaseClass {
 				try (ResultSet rs = pstmt.executeQuery()) {
 					if (rs.next()) {
 						tpaId = rs.getInt("id");
+						/* System.out.println(tpaId); */
 					}
 				}
 			}
@@ -253,6 +258,7 @@ public class BaseClass {
 				try (ResultSet rs = pstmt.executeQuery()) {
 					if (rs.next()) {
 						planId = rs.getInt("id");
+						/* System.out.println(planId); */
 					}
 				}
 			}
@@ -264,9 +270,8 @@ public class BaseClass {
 
 			premiumQuery = premiumQuery.replace("?", valueOf);
 
-			/*
-			 * System.out.println(premiumQuery);
-			 */
+			/* System.out.println(premiumQuery); */
+
 			return premiumQuery;
 
 		}
@@ -467,8 +472,8 @@ public class BaseClass {
 		return query;
 	}
 
-	//nationality query
-	public static String nationalityLoadingQueryAIAW() {
+	// nationality loading
+	public static String nationalityLoadingQueryAIAW(String emirate, String tpa) {
 
 		String nationalityLoadingsQuery = null;
 		// Database connection details
@@ -480,15 +485,15 @@ public class BaseClass {
 		String emirateName, tpaName;
 
 		// Scanner to get user inputs
-		Scanner scanner = new Scanner(System.in);
+		/* Scanner scanner = new Scanner(System.in); */
 
 		try (Connection connection = DriverManager.getConnection(dbURL, dbUsername, dbPassword)) {
 			// Prompt the user for inputs
-			System.out.print("Enter Emirate Name (e.g., Dubai): ");
-			emirateName = scanner.nextLine();
+			/* System.out.print("Enter Emirate Name (e.g., Dubai): "); */
+			emirateName = emirate;
 
-			System.out.print("Enter TPA Name (e.g., Mednet): ");
-			tpaName = scanner.nextLine();
+			/* System.out.print("Enter TPA Name (e.g., Mednet): "); */
+			tpaName = tpa;
 
 			// Step 1: Get Active Version ID
 			String activeVersionQuery = "WITH ActiveVersion AS (\r\n" + "		                SELECT pv.id\r\n"
@@ -563,13 +568,14 @@ public class BaseClass {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			scanner.close();
+			/* scanner.close(); */
 		}
 		return nationalityLoadingsQuery;
 
 	}
+
 	// industry loading
-	public static String industryLoadingQueryAIAW() {
+	public static String industryLoadingQueryAIAW(String emirate, String tpa) {
 		// Database connection details
 		String dbURL = "jdbc:mysql://aura-uat.cwfjz6cyloxy.me-south-1.rds.amazonaws.com:3306";
 		String dbUsername = "admin";
@@ -584,11 +590,11 @@ public class BaseClass {
 
 		try (Connection connection = DriverManager.getConnection(dbURL, dbUsername, dbPassword)) {
 			// Prompt the user for inputs
-			System.out.print("Enter Emirate Name (e.g., Dubai): ");
-			emirateName = scanner.nextLine();
+			/* System.out.print("Enter Emirate Name (e.g., Dubai): "); */
+			emirateName = emirate;
 
-			System.out.print("Enter TPA Name (e.g., Mednet): ");
-			tpaName = scanner.nextLine();
+			/* System.out.print("Enter TPA Name (e.g., Mednet): "); */
+			tpaName = tpa;
 
 			// Step 1: Get Active Version ID
 			String activeVersionQuery = "WITH ActiveVersion AS (" + "SELECT pv.id "
@@ -664,7 +670,7 @@ public class BaseClass {
 		return industryLoadingsQuery;
 	}
 
-	public static String previousInsurerLoadingQueryAIAW() {
+	public static String previousInsurerLoadingQueryAIAW(String emirate, String tpa) {
 		// Database connection details
 		String dbURL = "jdbc:mysql://aura-uat.cwfjz6cyloxy.me-south-1.rds.amazonaws.com:3306";
 		String dbUsername = "admin";
@@ -675,15 +681,15 @@ public class BaseClass {
 		String previousInsurerLoadingsQuery = null;
 
 		// Scanner to get user inputs
-		Scanner scanner = new Scanner(System.in);
+		/* Scanner scanner = new Scanner(System.in); */
 
 		try (Connection connection = DriverManager.getConnection(dbURL, dbUsername, dbPassword)) {
 			// Prompt the user for inputs
-			System.out.print("Enter Emirate Name (e.g., Dubai): ");
-			emirateName = scanner.nextLine();
+			/* System.out.print("Enter Emirate Name (e.g., Dubai): "); */
+			emirateName = emirate;
 
-			System.out.print("Enter TPA Name (e.g., Mednet): ");
-			tpaName = scanner.nextLine();
+			/* System.out.print("Enter TPA Name (e.g., Mednet): "); */
+			tpaName = tpa;
 
 			// Step 1: Get Active Version ID
 			String activeVersionQuery = "WITH ActiveVersion AS (" + "SELECT pv.id "
@@ -754,13 +760,13 @@ public class BaseClass {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			scanner.close();
+			/* scanner.close(); */
 		}
 
 		return previousInsurerLoadingsQuery;
 	}
 
-	public static String commissionAIAW() throws Exception {
+	public static String commissionAIAW(String emirate, String tpa, String plan) throws Exception {
 
 		// Database connection details
 		String dbURL = "jdbc:mysql://aura-uat.cwfjz6cyloxy.me-south-1.rds.amazonaws.com:3306";
@@ -771,18 +777,18 @@ public class BaseClass {
 		String emirateName, tpaName, planName;
 
 		// Scanner to get user inputs
-		Scanner scanner = new Scanner(System.in);
+		/* Scanner scanner = new Scanner(System.in); */
 
 		try (Connection connection = DriverManager.getConnection(dbURL, dbUsername, dbPassword)) {
 			// Prompt the user for inputs
-			System.out.print("Enter Emirate Name (e.g., Dubai): ");
-			emirateName = scanner.nextLine();
+			/* System.out.print("Enter Emirate Name (e.g., Dubai): "); */
+			emirateName = emirate;
 
-			System.out.print("Enter TPA Name (e.g., Mednet): ");
-			tpaName = scanner.nextLine();
+			/* System.out.print("Enter TPA Name (e.g., Mednet): "); */
+			tpaName = tpa;
 
-			System.out.print("Enter Plan Name (e.g., Gold): ");
-			planName = scanner.nextLine();
+			/* System.out.print("Enter Plan Name (e.g., Gold): "); */
+			planName = plan;
 
 			// Step 1: Get Active Version ID
 			String activeVersionQuery = " WITH ActiveVersion AS (\r\n" + "                    SELECT pv.id\r\n"
@@ -857,15 +863,12 @@ public class BaseClass {
 
 			commissionQuery = commissionQuery.replace("?", valueOf);
 
-			System.out.println(commissionQuery);
+			/* System.out.println(commissionQuery); */
 
 			return commissionQuery;
 
 		}
 
 	}
-
-	
-	
 
 }
