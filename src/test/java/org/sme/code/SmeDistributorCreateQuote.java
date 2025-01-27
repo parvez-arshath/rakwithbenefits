@@ -70,7 +70,7 @@ public class SmeDistributorCreateQuote extends BaseClass {
 
 	@When("User select number of categories")
 	public void user_select_number_of_categories() {
-		
+
 		selectDropDownData(createQuoteElements.getNumCategoriesDropDown(), "1");
 	}
 
@@ -107,21 +107,23 @@ public class SmeDistributorCreateQuote extends BaseClass {
 	}
 
 	String tpa;
+
 	@When("User should select TPA category")
 	public void user_should_select_TPA_category() {
 
 		Select tpaDropDownData = selectDropDownData(createQuoteElements.getSelectTpaCatA(), "0");
-		 tpa = tpaDropDownData.getFirstSelectedOption().getText();
-		
+		tpa = tpaDropDownData.getFirstSelectedOption().getText();
+
 	}
-	
+
 	String plan;
+
 	@When("User should select plan category")
 	public void user_should_select_plan_category() {
-	
+
 		Select planDropDownData = selectDropDownData(createQuoteElements.getSelectPlanCatA(), "0");
 		plan = planDropDownData.getFirstSelectedOption().getText();
-		
+
 	}
 
 	@When("User should click and upload template")
@@ -134,7 +136,6 @@ public class SmeDistributorCreateQuote extends BaseClass {
 	@When("User click proceed")
 	public void user_click_proceed() throws InterruptedException {
 
-		
 		Thread.sleep(2000);
 		jsClick(createQuoteElements.getProceedBtn());
 	}
@@ -156,7 +157,9 @@ public class SmeDistributorCreateQuote extends BaseClass {
 
 	@Then("User should validate the total premium for the created qoute")
 	public void user_should_validate_the_total_premium_for_the_created_qoute() throws Exception {
-		
+		crn = createQuoteElements.getCustomerId().getText();
+		String benefitsAIAW = benefitsAIAW(crn);
+		System.out.println(benefitsAIAW);
 		// base premium
 		String basePremiumAIAW = basePremiumAIAW(emirate, tpa, plan);
 		System.out.println(basePremiumAIAW);
@@ -164,13 +167,10 @@ public class SmeDistributorCreateQuote extends BaseClass {
 				calculatorData().getProperty("dbPasswordUAT"), basePremiumAIAW,
 				calculatorData().getProperty("excelCalculatorFilePath"), 0);
 
-	
-
 		// benefits
-		crn = createQuoteElements.getCustomerId().getText();
-		System.out.println(benefitsAIAW(crn));
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
-				calculatorData().getProperty("dbPasswordUAT"), benefitsAIAW(crn),
+				calculatorData().getProperty("dbPasswordUAT"),
+				benefitsAIAW,
 				calculatorData().getProperty("excelCalculatorFilePath"), 1);
 
 		// nationality loadings
@@ -188,7 +188,7 @@ public class SmeDistributorCreateQuote extends BaseClass {
 				calculatorData().getProperty("excelCalculatorFilePath"), 5);
 
 		// previous insurer loading
-		String previousInsurerLoadingQueryAIAW = previousInsurerLoadingQueryAIAW(emirate,tpa);
+		String previousInsurerLoadingQueryAIAW = previousInsurerLoadingQueryAIAW(emirate, tpa);
 		System.out.println(previousInsurerLoadingQueryAIAW);
 		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
 				calculatorData().getProperty("dbPasswordUAT"), previousInsurerLoadingQueryAIAW,

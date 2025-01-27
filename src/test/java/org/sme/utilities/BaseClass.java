@@ -461,16 +461,23 @@ public class BaseClass {
 		}
 	}
 
-	// benefits
-	public static String benefitsAIAW(String crn) {
-		String query = "SELECT * FROM 7003_group_medical_aiaw_transactions.benefits_table where client_reference_number like '%TEST-ABC-0125-1-00027%';";
+	public static String benefitsAIAW(String clientReferenceNumber) {
+        // Database connection details
+        String dbURL = "jdbc:mysql://aura-uat.cwfjz6cyloxy.me-south-1.rds.amazonaws.com:3306";
+        String dbUsername = "admin";
+        String dbPassword = "zFs4upwKvvpRbbXcKSTf8La3MP4ymd";
 
-		// Replace the content inside %...%
-		String newValue = crn;
-		query = query.replaceAll("'%.*?%'", "'%" + newValue + "%'");
+        // Construct the query manually
+        String benefitsQuery = "SELECT * FROM 7003_group_medical_aiaw_transactions.benefits_table "
+                + "WHERE client_reference_number LIKE '%"+clientReferenceNumber.trim()+"%'";
 
-		return query;
-	}
+        try (Connection connection = DriverManager.getConnection(dbURL, dbUsername, dbPassword)) {
+            return benefitsQuery.replaceAll(" /1", "");// Return the clean SQL query string
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Error while generating benefits query: " + e.getMessage();
+        }
+    }
 
 	// nationality loading
 	public static String nationalityLoadingQueryAIAW(String emirate, String tpa) {
