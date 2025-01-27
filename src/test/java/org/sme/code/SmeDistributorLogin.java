@@ -40,7 +40,7 @@ public class SmeDistributorLogin extends BaseClass {
 
 	@Then("User must be in the home page")
 	public void user_must_be_in_the_home_page() throws InterruptedException {
-		Thread.sleep(30000);
+		Thread.sleep(40000);
 		String pageUrl = getPageUrl();
 		System.out.println(pageUrl);
 		assertTrue(pageUrl.contains("aiaw/distributor"));
