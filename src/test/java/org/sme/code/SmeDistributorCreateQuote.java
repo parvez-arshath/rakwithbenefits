@@ -3,9 +3,6 @@ package org.sme.code;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.Select;
 import org.sme.pojo.CreateQuotePojo;
 import org.sme.utilities.BaseClass;
@@ -160,6 +157,7 @@ public class SmeDistributorCreateQuote extends BaseClass {
 		crn = createQuoteElements.getCustomerId().getText();
 		String benefitsAIAW = benefitsAIAW(crn);
 		System.out.println(benefitsAIAW);
+	
 		// base premium
 		String basePremiumAIAW = basePremiumAIAW(emirate, tpa, plan);
 		System.out.println(basePremiumAIAW);
