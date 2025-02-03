@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Scanner;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -28,6 +29,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -37,6 +40,17 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
+import org.testng.asserts.SoftAssert;
+
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.MediaEntityBuilder;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 
 public class BaseClass {
 
@@ -105,7 +119,7 @@ public class BaseClass {
 
 	public static Properties loginData() throws IOException {
 		FileReader reader = new FileReader(
-				"C:\\Users\\impelox-pc-048\\Downloads\\Sme\\Sme\\target\\DatasForDistributor\\LoginData.properties");
+				"C:\\Users\\impelox-pc-048\\eclipse-workspace\\SmeSingleCategory\\target\\DatasForDistributor\\LoginData.properties");
 		Properties props = new Properties();
 		props.load(reader);
 		return props;
@@ -114,7 +128,7 @@ public class BaseClass {
 
 	public static Properties createQuoteData() throws IOException {
 		FileReader reader = new FileReader(
-				"C:\\Users\\impelox-pc-048\\Downloads\\Sme\\Sme\\target\\DatasForDistributor\\createQuote.properties");
+				"C:\\Users\\impelox-pc-048\\eclipse-workspace\\SmeSingleCategory\\target\\DatasForDistributor\\createQuote.properties");
 		Properties props = new Properties();
 		props.load(reader);
 		return props;
@@ -159,7 +173,7 @@ public class BaseClass {
 
 	public static Properties calculatorData() throws IOException {
 		FileReader reader = new FileReader(
-				"C:\\Users\\impelox-pc-048\\eclipse-workspace\\SmeSingleCategory\\target\\DatasForDistributor\\DataForCalculator.properties");
+				"C:\\Users\\impelox-pc-048\\eclipse-workspace\\SmeSingleCategory\\target\\DatasForDistributor\\CalculationData.properties");
 		Properties props = new Properties();
 		props.load(reader);
 		return props;
@@ -462,22 +476,22 @@ public class BaseClass {
 	}
 
 	public static String benefitsAIAW(String clientReferenceNumber) {
-        // Database connection details
-        String dbURL = "jdbc:mysql://aura-uat.cwfjz6cyloxy.me-south-1.rds.amazonaws.com:3306";
-        String dbUsername = "admin";
-        String dbPassword = "zFs4upwKvvpRbbXcKSTf8La3MP4ymd";
+		// Database connection details
+		String dbURL = "jdbc:mysql://aura-uat.cwfjz6cyloxy.me-south-1.rds.amazonaws.com:3306";
+		String dbUsername = "admin";
+		String dbPassword = "zFs4upwKvvpRbbXcKSTf8La3MP4ymd";
 
-        // Construct the query manually
-        String benefitsQuery = "SELECT * FROM 7003_group_medical_aiaw_transactions.benefits_table "
-                + "WHERE client_reference_number LIKE '%"+clientReferenceNumber.trim()+"%'";
+		// Construct the query manually
+		String benefitsQuery = "SELECT * FROM 7003_group_medical_aiaw_transactions.benefits_table "
+				+ "WHERE client_reference_number LIKE '%" + clientReferenceNumber.trim() + "%'";
 
-        try (Connection connection = DriverManager.getConnection(dbURL, dbUsername, dbPassword)) {
-            return benefitsQuery.replaceAll(" /1", "");// Return the clean SQL query string
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return "Error while generating benefits query: " + e.getMessage();
-        }
-    }
+		try (Connection connection = DriverManager.getConnection(dbURL, dbUsername, dbPassword)) {
+			return benefitsQuery.replaceAll(" /1", "");// Return the clean SQL query string
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return "Error while generating benefits query: " + e.getMessage();
+		}
+	}
 
 	// nationality loading
 	public static String nationalityLoadingQueryAIAW(String emirate, String tpa) {

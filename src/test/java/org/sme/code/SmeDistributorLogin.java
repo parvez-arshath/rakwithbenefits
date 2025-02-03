@@ -3,14 +3,8 @@ package org.sme.code;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.time.Duration;
-
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.sme.pojo.DistributorLoginPojo;
 import org.sme.utilities.BaseClass;
-
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -28,6 +22,7 @@ public class SmeDistributorLogin extends BaseClass {
 
 	@When("User enter valid emailId and password")
 	public void user_enter_valid_emailId_and_password() throws InterruptedException, IOException {
+
 		d = new DistributorLoginPojo();
 		fillTextBox(d.getUserEmailDistributor(), loginData().getProperty("emailIdDistributorAIAW"));
 		fillTextBox(d.getUserPasswordDistributor(), loginData().getProperty("passwordDistributorAIAW"));
