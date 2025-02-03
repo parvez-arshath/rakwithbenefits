@@ -154,6 +154,7 @@ public class SmeDistributorCreateQuote extends BaseClass {
 
 	@Then("User should validate the total premium for the created qoute")
 	public void user_should_validate_the_total_premium_for_the_created_qoute() throws Exception {
+		Thread.sleep(3000);
 		crn = createQuoteElements.getCustomerId().getText();
 		String benefitsAIAW = benefitsAIAW(crn);
 		System.out.println(benefitsAIAW);
@@ -161,41 +162,41 @@ public class SmeDistributorCreateQuote extends BaseClass {
 		// base premium
 		String basePremiumAIAW = basePremiumAIAW(emirate, tpa, plan);
 		System.out.println(basePremiumAIAW);
-		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
-				calculatorData().getProperty("dbPasswordUAT"), basePremiumAIAW,
+		fetchDataFromDatabase(calculatorData().getProperty("dbUrlTest"), calculatorData().getProperty("dbUsernameTest"),
+				calculatorData().getProperty("dbPasswordTest"), basePremiumAIAW,
 				calculatorData().getProperty("excelCalculatorFilePath"), 0);
 
 		// benefits
-		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
-				calculatorData().getProperty("dbPasswordUAT"),
+		fetchDataFromDatabase(calculatorData().getProperty("dbUrlTest"), calculatorData().getProperty("dbUsernameTest"),
+				calculatorData().getProperty("dbPasswordTest"),
 				benefitsAIAW,
 				calculatorData().getProperty("excelCalculatorFilePath"), 1);
 
 		// nationality loadings
 		String nationalityLoadingQueryAIAW = nationalityLoadingQueryAIAW(emirate, tpa);
 		System.out.println(nationalityLoadingQueryAIAW);
-		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
-				calculatorData().getProperty("dbPasswordUAT"), nationalityLoadingQueryAIAW,
+		fetchDataFromDatabase(calculatorData().getProperty("dbUrlTest"), calculatorData().getProperty("dbUsernameTest"),
+				calculatorData().getProperty("dbPasswordTest"), nationalityLoadingQueryAIAW,
 				calculatorData().getProperty("excelCalculatorFilePath"), 4);
 
 		// industry loading
 		String industryLoadingQueryAIAW = industryLoadingQueryAIAW(emirate, tpa);
 		System.out.println(industryLoadingQueryAIAW);
-		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
-				calculatorData().getProperty("dbPasswordUAT"), industryLoadingQueryAIAW,
+		fetchDataFromDatabase(calculatorData().getProperty("dbUrlTest"), calculatorData().getProperty("dbUsernameTest"),
+				calculatorData().getProperty("dbPasswordTest"), industryLoadingQueryAIAW,
 				calculatorData().getProperty("excelCalculatorFilePath"), 5);
 
 		// previous insurer loading
 		String previousInsurerLoadingQueryAIAW = previousInsurerLoadingQueryAIAW(emirate, tpa);
 		System.out.println(previousInsurerLoadingQueryAIAW);
-		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
-				calculatorData().getProperty("dbPasswordUAT"), previousInsurerLoadingQueryAIAW,
+		fetchDataFromDatabase(calculatorData().getProperty("dbUrlTest"), calculatorData().getProperty("dbUsernameTest"),
+				calculatorData().getProperty("dbPasswordTest"), previousInsurerLoadingQueryAIAW,
 				calculatorData().getProperty("excelCalculatorFilePath"), 6);
 
 		System.out.println(calculatorData().getProperty("queryAIAWCommission"));
 		// Commission
-		fetchDataFromDatabase(calculatorData().getProperty("dbUrlUAT"), calculatorData().getProperty("dbUsernameUAT"),
-				calculatorData().getProperty("dbPasswordUAT"), calculatorData().getProperty("queryAIAWCommission"),
+		fetchDataFromDatabase(calculatorData().getProperty("dbUrlTest"), calculatorData().getProperty("dbUsernameTest"),
+				calculatorData().getProperty("dbPasswordTest"), calculatorData().getProperty("queryAIAWCommission"),
 				calculatorData().getProperty("excelCalculatorFilePath"), 9);
 
 		/*
