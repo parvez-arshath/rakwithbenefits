@@ -1,8 +1,13 @@
-package org.sme.code;
+package org.smerak.code;
 
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import org.checkerframework.checker.units.qual.s;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.sme.pojo.CreateQuotePojo;
 import org.sme.utilities.BaseClass;
@@ -52,28 +57,31 @@ public class SmeDistributorCreateQuote extends BaseClass {
 
 	@When("User click company details next button")
 	public void user_click_company_details_next_button() throws InterruptedException {
-		Thread.sleep(2000);
+		Thread.sleep(3000);
 		clickButton(createQuoteElements.getCompanyDetailsNextButton());
 	}
 
 	@When("User select start date and end date in census")
-	public void user_select_start_date_and_end_date_in_census() {
-		clickButton(createQuoteElements.getCensusPolicyStartDate());
-		createQuoteElements.getCensusPolicyStartDate().clear();
+	public void user_select_start_date_and_end_date_in_census() throws InterruptedException {
+		WebElement censusPolicyStartDate = createQuoteElements.getCensusPolicyStartDate();
+		/* clickButton(censusPolicyStartDate); */
+		censusPolicyStartDate.clear();
+		Thread.sleep(2000);
 		String currentDate = currentDate();
+		fillTextBox(censusPolicyStartDate, currentDate);
 		System.out.println(currentDate);
-		createQuoteElements.getCensusPolicyStartDate().sendKeys(currentDate);
+
 	}
 
 	@When("User select number of categories")
-	public void user_select_number_of_categories() {
-
+	public void user_select_number_of_categories() throws InterruptedException {
+		Thread.sleep(3000);
 		selectDropDownData(createQuoteElements.getNumCategoriesDropDown(), "1");
 	}
 
 	@When("User enter distributor commission")
 	public void user_enter_distributor_commission() {
-		fillTextBox(createQuoteElements.getDistributorCommisionTextBox(), "15");
+		fillTextBox(createQuoteElements.getDistributorCommisionTextBox(), "2");
 	}
 
 	@When("User enter sales agent")
@@ -88,17 +96,20 @@ public class SmeDistributorCreateQuote extends BaseClass {
 
 	}
 
+	String group;
+
 	@When("User should choose group")
 	public void user_should_choose_group() throws InterruptedException {
 		Thread.sleep(2000);
-		selectDropDownData(createQuoteElements.getSelectGroupnameDropDown(), "0");
+		Select groupDropDownData = selectDropDownData(createQuoteElements.getSelectGroupnameDropDown(), "0");
+		group = groupDropDownData.getFirstSelectedOption().getText();
 	}
 
 	String emirate;
 
 	@When("User should select emirates category")
 	public void user_should_select_emirates_category() {
-		Select emirateDropDownData = selectDropDownData(createQuoteElements.getSelectEmiratesDropDownCatA(), "1");
+		Select emirateDropDownData = selectDropDownData(createQuoteElements.getSelectEmiratesDropDownCatA(), "2");
 		emirate = emirateDropDownData.getFirstSelectedOption().getText();
 
 	}
@@ -117,16 +128,15 @@ public class SmeDistributorCreateQuote extends BaseClass {
 
 	@When("User should select plan category")
 	public void user_should_select_plan_category() {
-
 		Select planDropDownData = selectDropDownData(createQuoteElements.getSelectPlanCatA(), "0");
 		plan = planDropDownData.getFirstSelectedOption().getText();
 
 	}
 
 	@When("User should click and upload template")
-	public void user_should_click_and_upload_template() {
-		fillTextBox(createQuoteElements.getUploadTemplateId(),
-				"C:\\Users\\impelox-pc-048\\Desktop\\censuses sheet\\census_a_automation.xlsx");
+	public void user_should_click_and_upload_template() throws InterruptedException {
+		Thread.sleep(2000);
+		fillTextBox(createQuoteElements.getUploadTemplateId(), "D:\\New Cencus for automation\\cencus_rak.xlsx");
 		clickButton(createQuoteElements.getWarningPopupCancelButton());
 	}
 
@@ -137,6 +147,33 @@ public class SmeDistributorCreateQuote extends BaseClass {
 		jsClick(createQuoteElements.getProceedBtn());
 	}
 
+	@When("User select the needed benefits")
+	public void user_select_the_needed_benefits() {
+
+		List<String> dropdownValues = Arrays.asList(
+				selectDropDownData(createQuoteElements.getSumInsured(), "3").getFirstSelectedOption().getText(),
+				selectDropDownData(createQuoteElements.getTerritorialScopeCoverage(), "2").getFirstSelectedOption()
+						.getText(),
+				selectDropDownData(createQuoteElements.getRoomType(), "0").getFirstSelectedOption().getText(),
+				selectDropDownData(createQuoteElements.getOpConsultation(), "2").getFirstSelectedOption().getText(),
+				selectDropDownData(createQuoteElements.getPharmacyLimit(), "0").getFirstSelectedOption().getText(),
+				selectDropDownData(createQuoteElements.getPharamacyCoPay(), "0").getFirstSelectedOption().getText(),
+				selectDropDownData(createQuoteElements.getOpServices(), "0").getFirstSelectedOption().getText(),
+				selectDropDownData(createQuoteElements.getPhysiotherapy(), "0").getFirstSelectedOption().getText(),
+				selectDropDownData(createQuoteElements.getOrganTransplant(), "0").getFirstSelectedOption().getText(),
+				selectDropDownData(createQuoteElements.getReturnAirfare(), "0").getFirstSelectedOption().getText(),
+				selectDropDownData(createQuoteElements.getSecondMedicalOpinion(), "0").getFirstSelectedOption()
+						.getText(),
+				selectDropDownData(createQuoteElements.getMaternityOPServices(), "0").getFirstSelectedOption()
+						.getText(),
+				selectDropDownData(createQuoteElements.getMaternityIPServices(), "0").getFirstSelectedOption()
+						.getText(),
+				selectDropDownData(createQuoteElements.getNewBornCover(), "0").getFirstSelectedOption().getText());
+
+		writeDropDownDataToExcel(dropdownValues);
+
+	}
+
 	@When("User click next button")
 	public void user_click_next_button() throws InterruptedException {
 		Thread.sleep(3000);
@@ -145,8 +182,9 @@ public class SmeDistributorCreateQuote extends BaseClass {
 
 	@Then("User must displayed with quote created popup message")
 	public void user_must_displayed_with_quote_created_popup_message() {
-
 		System.out.println(createQuoteElements.getQouteCreatedPopUpMessage().getText());
+		assertTrue(createQuoteElements.getQouteCreatedPopUpMessage().getText()
+				.contains("Successfully created the the quote"));
 
 	}
 
@@ -156,56 +194,21 @@ public class SmeDistributorCreateQuote extends BaseClass {
 	public void user_should_validate_the_total_premium_for_the_created_qoute() throws Exception {
 		Thread.sleep(3000);
 		crn = createQuoteElements.getCustomerId().getText();
-		String benefitsAIAW = benefitsAIAW(crn);
-		System.out.println(benefitsAIAW);
-	
-		// base premium
-		String basePremiumAIAW = basePremiumAIAW(emirate, tpa, plan);
-		System.out.println(basePremiumAIAW);
-		fetchDataFromDatabase(calculatorData().getProperty("dbUrlTest"), calculatorData().getProperty("dbUsernameTest"),
-				calculatorData().getProperty("dbPasswordTest"), basePremiumAIAW,
-				calculatorData().getProperty("excelCalculatorFilePath"), 0);
+		String benefits = benefitsQuery(calculatorData().getProperty("schema"), crn);
+		System.out.println(benefits);
+		System.out.println(group + "\n" + emirate + "\n" + tpa + "\n" + plan);
 
-		// benefits
-		fetchDataFromDatabase(calculatorData().getProperty("dbUrlTest"), calculatorData().getProperty("dbUsernameTest"),
-				calculatorData().getProperty("dbPasswordTest"),
-				benefitsAIAW,
-				calculatorData().getProperty("excelCalculatorFilePath"), 1);
+		newExcelOverride(basePremiumQuery(calculatorData().getProperty("schema"), group, emirate, tpa, plan), benefits,
+				nationalityLoadingQuery(calculatorData().getProperty("schema"), group, emirate, tpa),
+				industryLoadingQuery(calculatorData().getProperty("schema"), group, emirate, tpa),
+				previousInsurerLoadingQuery(calculatorData().getProperty("schema"), group, emirate, tpa),
+				commissionQuery(calculatorData().getProperty("schema"), group, emirate, tpa, plan));
 
-		// nationality loadings
-		String nationalityLoadingQueryAIAW = nationalityLoadingQueryAIAW(emirate, tpa);
-		System.out.println(nationalityLoadingQueryAIAW);
-		fetchDataFromDatabase(calculatorData().getProperty("dbUrlTest"), calculatorData().getProperty("dbUsernameTest"),
-				calculatorData().getProperty("dbPasswordTest"), nationalityLoadingQueryAIAW,
-				calculatorData().getProperty("excelCalculatorFilePath"), 4);
+		Thread.sleep(3000);
+		createQuoteElements.getQuoteDetails().click();
+		String expectedValue = createQuoteElements.getPremiumUiTotal().getText();
+		double calculatedValue = getCalculatedDataCell();
+		validateCalculatedValue(calculatedValue, expectedValue, 2.5);
 
-		// industry loading
-		String industryLoadingQueryAIAW = industryLoadingQueryAIAW(emirate, tpa);
-		System.out.println(industryLoadingQueryAIAW);
-		fetchDataFromDatabase(calculatorData().getProperty("dbUrlTest"), calculatorData().getProperty("dbUsernameTest"),
-				calculatorData().getProperty("dbPasswordTest"), industryLoadingQueryAIAW,
-				calculatorData().getProperty("excelCalculatorFilePath"), 5);
-
-		// previous insurer loading
-		String previousInsurerLoadingQueryAIAW = previousInsurerLoadingQueryAIAW(emirate, tpa);
-		System.out.println(previousInsurerLoadingQueryAIAW);
-		fetchDataFromDatabase(calculatorData().getProperty("dbUrlTest"), calculatorData().getProperty("dbUsernameTest"),
-				calculatorData().getProperty("dbPasswordTest"), previousInsurerLoadingQueryAIAW,
-				calculatorData().getProperty("excelCalculatorFilePath"), 6);
-
-		System.out.println(calculatorData().getProperty("queryAIAWCommission"));
-		// Commission
-		fetchDataFromDatabase(calculatorData().getProperty("dbUrlTest"), calculatorData().getProperty("dbUsernameTest"),
-				calculatorData().getProperty("dbPasswordTest"), calculatorData().getProperty("queryAIAWCommission"),
-				calculatorData().getProperty("excelCalculatorFilePath"), 9);
-
-		/*
-		 * // Census
-		 * toFetchCensusSheet("C:\\Users\\impelox-pc-048\\Desktop\\censuses sheet\\census_a_automation.xlsx"
-		 * ,
-		 * "C:\\Users\\impelox-pc-048\\eclipse-workspace\\SmeSingleCategory\\target\\ExcelCalculatorForDistributor\\Arshad New Calculator.xlsx"
-		 * , 0, 10);
-		 */
 	}
-
 }

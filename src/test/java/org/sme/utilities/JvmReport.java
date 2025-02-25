@@ -12,9 +12,9 @@ public class JvmReport {
 	
 	public static void generateJVMReport(String jsonpath) {
 		
-		File f=new File("C:\\Users\\impelox-pc-048\\eclipse-workspace\\SmeSingleCategory\\target\\jvmreport");
+		File f=new File("C:\\Users\\impelox-pc-048\\Desktop\\Impelox Projects\\Sme-Medgulf\\target\\jvmreport");
 		
-		Configuration con=new Configuration(f, "AIAW Create Quote");
+		Configuration con=new Configuration(f, "Medgulf Create Quote");
 		con.addClassifications("TestName", "Verify Create Quote AIAw");
 		con.addClassifications("TestDescription", "verifying login and create a quote");
 		con.addClassifications("Category", "Regression");

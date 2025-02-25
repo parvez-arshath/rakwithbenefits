@@ -23,6 +23,7 @@ Feature: To Validate the create quote feature of distributor SME application
     And User should select plan category 
     And User should click and upload template
     And User click proceed
+    And User select the needed benefits
     And User click next button
     Then User must displayed with quote created popup message
     Then User should validate the total premium for the created qoute

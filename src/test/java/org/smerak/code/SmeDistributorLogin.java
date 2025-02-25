@@ -1,4 +1,4 @@
-package org.sme.code;
+package org.smerak.code;
 
 import static org.junit.Assert.assertTrue;
 
@@ -12,20 +12,12 @@ import io.cucumber.java.en.When;
 public class SmeDistributorLogin extends BaseClass {
 	DistributorLoginPojo d;
 
-	@Given("User must be in the login page")
-	public void user_must_be_in_the_login_page() throws IOException {
-		launchBrowser("chrome");
-		launchUrl(loginData().getProperty("urlAIAW"));
-		maximizeWindow();
-		impWait();
-	}
-
 	@When("User enter valid emailId and password")
 	public void user_enter_valid_emailId_and_password() throws InterruptedException, IOException {
 
 		d = new DistributorLoginPojo();
-		fillTextBox(d.getUserEmailDistributor(), loginData().getProperty("emailIdDistributorAIAW"));
-		fillTextBox(d.getUserPasswordDistributor(), loginData().getProperty("passwordDistributorAIAW"));
+		fillTextBox(d.getUserEmailDistributor(), loginData().getProperty("emailIdDistributor"));
+		fillTextBox(d.getUserPasswordDistributor(), loginData().getProperty("passwordDistributor"));
 	}
 
 	@When("User click login button")
@@ -38,7 +30,7 @@ public class SmeDistributorLogin extends BaseClass {
 		Thread.sleep(40000);
 		String pageUrl = getPageUrl();
 		System.out.println(pageUrl);
-		assertTrue(pageUrl.contains("aiaw/distributor"));
+		assertTrue(pageUrl.contains("rak/distributor"));
 	}
 
 }
