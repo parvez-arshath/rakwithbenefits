@@ -204,7 +204,7 @@ public class SmeDistributorCreateQuote extends BaseClass {
 				previousInsurerLoadingQuery(calculatorData().getProperty("schema"), group, emirate, tpa),
 				commissionQuery(calculatorData().getProperty("schema"), group, emirate, tpa, plan));
 
-		Thread.sleep(3000);
+		Thread.sleep(4000);
 		createQuoteElements.getQuoteDetails().click();
 		String expectedValue = createQuoteElements.getPremiumUiTotal().getText();
 		double calculatedValue = getCalculatedDataCell();

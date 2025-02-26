@@ -111,7 +111,7 @@ public class CreateQuotePojo extends BaseClass {
 	@FindBy(xpath = "//div[@class='row header ng-star-inserted']//div[contains(text(),'Customer ID')]//following-sibling::div")
 	private WebElement customerId;
 
-	@FindBy(xpath = "//div[text()='Quote Details ']")
+	@FindBy(xpath = "//div[text()='Quote Details ']//parent::div[@class='small_box mt-2']")
 	private WebElement quoteDetails;
 
 	@FindBy(xpath = "//td[text()='Total']//following-sibling::td//child::div")
