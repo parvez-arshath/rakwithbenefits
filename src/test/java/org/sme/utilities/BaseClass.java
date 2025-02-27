@@ -812,11 +812,10 @@ public class BaseClass {
 	}
 
 	public static void writeDropDownDataToExcel(List<String> dropdownValues) {
-
 		FileInputStream fileInputStream;
 		Workbook workbook;
 		String filePath = System.getProperty("user.dir")
-				+ "\\target\\ExcelCalculatorForDistributor\\Premium Calculator - RAK.xlsx";
+				+ "\\target\\ExcelCalculatorForDistributor\\Premium calculator - dic.xlsx";
 		try {
 			File file = new File(filePath);
 			if (!file.exists()) {
@@ -828,23 +827,23 @@ public class BaseClass {
 			workbook = new XSSFWorkbook(fileInputStream);
 			fileInputStream.close();
 
-			// Get "Sheet 2"
+			// Get "Sheet2"
 			Sheet sheet = workbook.getSheet("Sheet2");
 			if (sheet == null) {
 				System.out.println("Sheet 2 does not exist. Please provide a valid sheet.");
 				return; // Exit if sheet doesn't exist
 			}
 
-			// Clear all rows by creating new ones
+			// Clear all existing rows
 			int totalRows = sheet.getPhysicalNumberOfRows();
-			for (int i = 0; i < totalRows; i++) {
-				sheet.createRow(i); // Instead of getting a row, create a new row
+			for (int i = totalRows - 1; i >= 0; i--) {
+				sheet.removeRow(sheet.getRow(i));
 			}
 
-			// Create a new row at index 0
-			Row row = sheet.createRow(0);
+			// Write dropdown values into the first column
 			for (int i = 0; i < dropdownValues.size(); i++) {
-				row.createCell(i).setCellValue(dropdownValues.get(i));
+				Row row = sheet.createRow(i); // Create a new row at each index
+				row.createCell(0).setCellValue(dropdownValues.get(i)); // Set value in the first column
 			}
 
 			// Save the updated Excel file
@@ -853,11 +852,10 @@ public class BaseClass {
 			fileOut.close();
 			workbook.close();
 
-			System.out.println("Data successfully written to Sheet 2 in: " + filePath);
+			System.out.println("Data successfully written to the first column in Sheet2: " + filePath);
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 }
